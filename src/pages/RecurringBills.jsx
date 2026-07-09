@@ -16,6 +16,11 @@ const [amount, setAmount] = useState("");
 const [dueDate, setDueDate] = useState("");
 const [isEditing, setIsEditing] = useState(false);
 const [editId, setEditId] = useState(null);
+const [showDeleteModal, setShowDeleteModal] =
+  useState(false);
+
+const [deleteId, setDeleteId] =
+  useState(null);
 
   useEffect(() => {
     fetchBills();
@@ -193,6 +198,11 @@ const handleUpdateBill = async () => {
   } catch (error) {
     console.log(error);
   }
+};
+
+const openDeleteModal = (id) => {
+  setDeleteId(id);
+  setShowDeleteModal(true);
 };
 
 const handleDelete = async (id) => {
@@ -692,8 +702,8 @@ const handleStatusChange = async (
 
     <FaTrash
   onClick={() =>
-    handleDelete(bill.id)
-  }
+  openDeleteModal(bill.id)
+}
   className="
     text-red-500
     cursor-pointer
@@ -782,6 +792,56 @@ const handleStatusChange = async (
           {isEditing
   ? "Update"
   : "Save"}
+        </button>
+
+      </div>
+
+    </div>
+
+  </div>
+)}
+
+{showDeleteModal && (
+  <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50">
+
+    <div className="bg-white p-6 rounded-xl w-[400px]">
+
+      <h2 className="text-xl font-bold mb-3">
+        Delete Bill
+      </h2>
+
+      <p className="text-gray-600 mb-5">
+        Are you sure you want to delete it?
+      </p>
+
+      <div className="flex justify-end gap-3">
+
+        <button
+          onClick={() =>
+            setShowDeleteModal(false)
+          }
+          className="
+            px-4 py-2
+            border
+            rounded-lg
+          "
+        >
+          Cancel
+        </button>
+
+        <button
+          onClick={() => {
+            handleDelete(deleteId);
+            setShowDeleteModal(false);
+          }}
+          className="
+            bg-red-500
+            text-white
+            px-4 py-2
+            rounded-lg
+          "
+        >
+          Delete
         </button>
 
       </div>

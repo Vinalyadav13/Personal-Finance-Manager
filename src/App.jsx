@@ -8,6 +8,8 @@ import Transactions from "./pages/Transactions";
 import Budgets from "./pages/Budgets";
 import Pots from "./pages/Pots";
 import RecurringBills from "./pages/RecurringBills";
+import ForgotPassword from "./pages/ForgotPassword";
+import ResetPassword from "./pages/ResetPassword";
 
 function App() {
   return (
@@ -51,6 +53,17 @@ function App() {
   path="/recurring-bills"
   element={<RecurringBills />}
 />
+
+<Route
+  path="/forgot-password"
+  element={<ForgotPassword />}
+/>
+
+<Route
+  path="/reset-password/:token"
+  element={<ResetPassword />}
+/>
+
       </Routes>
     </BrowserRouter>
   );

@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 import axios from "axios";
 import Sidebar from "../components/Sidebar";
 import { FaEdit, FaTrash } from "react-icons/fa";
+import { toast } from "react-toastify";
 
 function Pots() {
   const [pots, setPots] = useState([]);
@@ -22,6 +23,12 @@ const [moneyAmount, setMoneyAmount] =
 
 const [withdrawAmount, setWithdrawAmount] =
   useState("");
+
+  const [showDeleteModal, setShowDeleteModal] =
+  useState(false);
+
+const [deleteId, setDeleteId] =
+  useState(null);
 
 
   const [showModal, setShowModal] = useState(false);
@@ -108,14 +115,24 @@ const saveMoneyToPot = async () => {
 );
 
     fetchPots();
+    toast.success(
+  "Money added successfully!"
+);
 
     setMoneyAmount("");
     setSelectedPotId(null);
     setShowAddMoneyModal(false);
 
   } catch (error) {
-    console.log(error);
-  }
+
+  console.log(error);
+
+  toast.error(
+    error.response?.data?.message ||
+    "Unable to add money."
+  );
+
+}
 };
 
   const handleAddPot = async () => {
@@ -136,6 +153,7 @@ const saveMoneyToPot = async () => {
     );
 
     fetchPots();
+    toast.success("Pot added successfully!");
 
     setShowModal(false);
 
@@ -143,8 +161,15 @@ const saveMoneyToPot = async () => {
     setTargetAmount("");
 
   } catch (error) {
-    console.log(error);
-  }
+
+  console.log(error);
+
+  toast.error(
+    error.response?.data?.message ||
+    "Unable to add pot."
+  );
+
+}
 };
 
 const handleWithdrawMoney = async () => {
@@ -158,9 +183,9 @@ const handleWithdrawMoney = async () => {
       Number(withdrawAmount);
 
     if (newAmount < 0) {
-      alert(
-        "Cannot withdraw more than saved amount"
-      );
+      toast.error(
+  "Cannot withdraw more than saved amount"
+);
       return;
     }
 
@@ -200,15 +225,29 @@ const handleWithdrawMoney = async () => {
 );
 
     fetchPots();
-
+    toast.success(
+  "Money withdrawn successfully!"
+);
     setWithdrawAmount("");
     setSelectedPot(null);
 
     setShowWithdrawModal(false);
 
   } catch (error) {
-    console.log(error);
-  }
+
+  console.log(error);
+
+  toast.error(
+    error.response?.data?.message ||
+    "Unable to withdraw money."
+  );
+
+}
+};
+
+const openDeleteModal = (id) => {
+  setDeleteId(id);
+  setShowDeleteModal(true);
 };
 
 
@@ -242,10 +281,20 @@ const handleDelete = async (id) => {
     );
 
     fetchPots();
+    toast.success(
+  "Pot deleted successfully!"
+);
 
   } catch (error) {
-    console.log(error);
-  }
+
+  console.log(error);
+
+  toast.error(
+    error.response?.data?.message ||
+    "Unable to delete pot."
+  );
+
+}
 };
 
 const handleUpdatePot = async () => {
@@ -266,6 +315,9 @@ const handleUpdatePot = async () => {
     );
 
     fetchPots();
+    toast.success(
+  "Pot updated successfully!"
+);
 
     setShowModal(false);
 
@@ -276,8 +328,15 @@ const handleUpdatePot = async () => {
     setTargetAmount("");
 
   } catch (error) {
-    console.log(error);
-  }
+
+  console.log(error);
+
+  toast.error(
+    error.response?.data?.message ||
+    "Unable to update pot."
+  );
+
+}
 };
 
   return (
@@ -418,7 +477,9 @@ className="
 </button>
 
     <button
-  onClick={() => handleDelete(pot.id)}
+  onClick={() =>
+  openDeleteModal(pot.id)
+}
   className="
   p-2
   rounded-lg
@@ -683,6 +744,56 @@ className="
 
   </div>
 
+)}
+
+{showDeleteModal && (
+  <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50">
+
+    <div className="bg-white p-6 rounded-xl w-[400px]">
+
+      <h2 className="text-xl font-bold mb-3">
+        Delete Pot
+      </h2>
+
+      <p className="text-gray-600 mb-5">
+        Are you sure you want to delete it?
+      </p>
+
+      <div className="flex justify-end gap-3">
+
+        <button
+          onClick={() =>
+            setShowDeleteModal(false)
+          }
+          className="
+            px-4 py-2
+            border
+            rounded-lg
+          "
+        >
+          Cancel
+        </button>
+
+        <button
+          onClick={() => {
+            handleDelete(deleteId);
+            setShowDeleteModal(false);
+          }}
+          className="
+            bg-red-500
+            text-white
+            px-4 py-2
+            rounded-lg
+          "
+        >
+          Delete
+        </button>
+
+      </div>
+
+    </div>
+
+  </div>
 )}
 
     </div>

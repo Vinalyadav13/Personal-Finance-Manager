@@ -3,6 +3,8 @@ import axios from "axios";
 import Sidebar from "../components/Sidebar";
 import { Link } from "react-router-dom";
 import CountUp from "react-countup";
+import IncomeExpenseChart from "../components/IncomeExpenseChart";
+import { toast } from "react-toastify";
 
 
 function Dashboard() {
@@ -20,6 +22,16 @@ const [recentTransactions, setRecentTransactions] =
   useState([]);
   const [pots, setPots] =
   useState([]);
+  const [trendData, setTrendData] = useState([]);
+  const [showReportModal, setShowReportModal] =
+  useState(false);
+
+const [reportAction, setReportAction] =
+  useState("");
+
+const [reportFilter, setReportFilter] =
+  useState("all");
+  const [sendingEmail, setSendingEmail] = useState(false);
 
 const fetchSummary = async () => {
   try {
@@ -153,12 +165,38 @@ const fetchPots = async () => {
   }
 };
 
+const fetchIncomeExpenseTrend = async () => {
+
+  try {
+
+    const token = localStorage.getItem("token");
+
+    const response = await axios.get(
+      "http://localhost:5000/api/analytics/income-expense-trend",
+      {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      }
+    );
+
+    setTrendData(response.data);
+
+  } catch (error) {
+
+    console.log(error);
+
+  }
+
+};
+
 useEffect(() => {
   fetchSummary();
   fetchRecentTransactions();
   fetchUpcomingBills();
   fetchBudgets();
   fetchPots();
+  fetchIncomeExpenseTrend();
 }, []);
 
 const getDaysLeft = (dueDate) => {
@@ -183,7 +221,100 @@ const totalSaved = pots.reduce(
   0
 );
 
+const downloadReport = async (filter) => {
 
+  try {
+
+    const token = localStorage.getItem("token");
+
+    const response = await axios.get(
+      `http://localhost:5000/api/download-report?filter=${filter}`,
+      {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+        responseType: "blob",
+      }
+    );
+
+    const url =
+      window.URL.createObjectURL(
+        new Blob([response.data])
+      );
+
+    const link =
+      document.createElement("a");
+
+    link.href = url;
+
+    link.download =
+      "Transaction_Report.pdf";
+
+    document.body.appendChild(link);
+
+    link.click();
+
+    link.remove();
+
+  } catch (error) {
+
+    console.log(error);
+
+    toast.error("Unable to download report.");
+
+  }
+
+};
+
+const emailReport = async (filter) => {
+
+  try {
+
+    setSendingEmail(true);
+
+    const token = localStorage.getItem("token");
+
+    const response = await axios.get(
+      `http://localhost:5000/api/email-report?filter=${filter}`,
+      {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      }
+    );
+
+    toast.success(response.data.message);
+
+  } catch (error) {
+
+    toast.error(
+  error.response?.data?.message ||
+  "Unable to send email."
+);
+
+  } finally {
+
+    setSendingEmail(false);
+
+  }
+
+};
+
+const handleGenerateReport = () => {
+
+  setShowReportModal(false);
+
+  if (reportAction === "download") {
+
+    downloadReport(reportFilter);
+
+  } else {
+
+    emailReport(reportFilter);
+
+  }
+
+};
 
   return (
     <div className="flex h-screen">
@@ -194,7 +325,59 @@ const totalSaved = pots.reduce(
       {/* Main Content */}
       
         <div className="flex-1 ml-72 p-5 bg-gray-100 page-fade">
-        <h1 className="text-3xl font-bold mb-5">Overview</h1>
+        <div className="flex justify-between items-center mb-5">
+
+  <h1 className="text-3xl font-bold">
+    Overview
+  </h1>
+
+  <div className="flex gap-3">
+
+    <button
+  onClick={() => {
+  setReportAction("download");
+  setShowReportModal(true);
+}}
+  className="
+    bg-blue-600
+    hover:bg-blue-700
+    text-white
+    px-5
+    py-2
+    rounded-lg
+    font-medium
+    transition
+  "
+>
+  📄 Download Report
+</button>
+
+    <button
+  onClick={() => {
+  setReportAction("email");
+  setShowReportModal(true);
+}}
+  disabled={sendingEmail}
+  className="
+    bg-green-600
+    hover:bg-green-700
+    disabled:bg-gray-400
+    text-white
+    px-5
+    py-2
+    rounded-lg
+    font-medium
+    transition
+  "
+>
+  {sendingEmail
+    ? "Sending..."
+    : "📧 Email My Report"}
+</button>
+
+  </div>
+
+</div>
 
         <div className="grid grid-cols-3 gap-6">
           <div
@@ -249,6 +432,11 @@ const totalSaved = pots.reduce(
             </p>
           </div>
           </div>
+
+          <div className="mt-6">
+  <IncomeExpenseChart data={trendData} />
+</div>
+
           <div className="grid grid-cols-2 gap-6 mt-4">
 
   {/* Recent Transactions */}
@@ -710,6 +898,127 @@ const totalSaved = pots.reduce(
 
  </div>
 </div>
+
+{
+showReportModal && (
+
+<div className="fixed inset-0 bg-black/40 flex justify-center items-center z-50">
+
+<div className="bg-white rounded-xl p-8 w-[420px]">
+
+<h2 className="text-2xl font-bold mb-5">
+Generate Report
+</h2>
+
+<p className="font-medium mb-3">
+Report Duration
+</p>
+
+<div className="space-y-3">
+
+<label className="flex gap-3">
+
+<input
+type="radio"
+name="report"
+value="all"
+checked={reportFilter==="all"}
+onChange={(e)=>setReportFilter(e.target.value)}
+/>
+
+All Transactions
+
+</label>
+
+<label className="flex gap-3">
+
+<input
+type="radio"
+name="report"
+value="7days"
+checked={reportFilter==="7days"}
+onChange={(e)=>setReportFilter(e.target.value)}
+/>
+
+Last 7 Days
+
+</label>
+
+<label className="flex gap-3">
+
+<input
+type="radio"
+name="report"
+value="30days"
+checked={reportFilter==="30days"}
+onChange={(e)=>setReportFilter(e.target.value)}
+/>
+
+Last 30 Days
+
+</label>
+
+<label className="flex gap-3">
+
+<input
+type="radio"
+name="report"
+value="thisMonth"
+checked={reportFilter==="thisMonth"}
+onChange={(e)=>setReportFilter(e.target.value)}
+/>
+
+This Month
+
+</label>
+
+<label className="flex gap-3">
+
+<input
+type="radio"
+name="report"
+value="lastMonth"
+checked={reportFilter==="lastMonth"}
+onChange={(e)=>setReportFilter(e.target.value)}
+/>
+
+Last Month
+
+</label>
+
+</div>
+
+<div className="flex justify-end gap-3 mt-8">
+
+<button
+onClick={()=>{
+setShowReportModal(false);
+}}
+className="px-5 py-2 border rounded-lg"
+>
+
+Cancel
+
+</button>
+
+<button
+onClick={handleGenerateReport}
+className="bg-blue-600 text-white px-5 py-2 rounded-lg"
+>
+
+Generate
+
+</button>
+
+</div>
+
+</div>
+
+</div>
+
+)
+}
+
       </div>
       </div>
 

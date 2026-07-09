@@ -2,6 +2,7 @@ import { Link, useNavigate } from "react-router-dom";
 import { useState } from "react";
 import { FaEye, FaEyeSlash } from "react-icons/fa";
 import axios from "axios";
+import { toast } from "react-toastify";
 
 function Login() {
     const navigate = useNavigate();
@@ -26,14 +27,13 @@ const handleLogin = async () => {
       response.data.token
     );
 
-    alert("Login Successful");
+    toast.success("Login successful!");
 
-    navigate("/dashboard");
+setTimeout(() => {
+  navigate("/dashboard");
+}, 1000);
   } catch (error) {
-    alert(
-      error.response?.data?.message ||
-      "Login Failed"
-    );
+    toast.error(error.response?.data?.message || "Login failed");
   }
 };
 
@@ -98,6 +98,19 @@ const handleLogin = async () => {
       ? <FaEyeSlash />
       : <FaEye />}
   </button>
+
+</div>
+
+<div className="flex justify-end mb-4">
+
+  <Link
+    to="/forgot-password"
+    className="text-sm text-blue-600 hover:underline"
+  >
+
+    Forgot Password?
+
+  </Link>
 
 </div>
 

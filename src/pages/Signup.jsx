@@ -1,10 +1,12 @@
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
+import axios from "axios";
 import { useState } from "react";
 import { FaEye, FaEyeSlash } from "react-icons/fa";
-
+import { toast } from "react-toastify";
 
 
 function Signup() {
+    const navigate = useNavigate();
 
   const [showPassword, setShowPassword] =
     useState(false);
@@ -20,6 +22,59 @@ function Signup() {
     setConfirmPassword] =
     useState("");
 
+    const [name, setName] =
+  useState("");
+
+const [email, setEmail] =
+  useState("");
+
+  const handleSignup = async () => {
+  try {
+
+    if (
+      !name ||
+      !email ||
+      !password ||
+      !confirmPassword
+    ) {
+      toast.warning("Please fill all fields");
+      return;
+    }
+
+    if (password !== confirmPassword) {
+     toast.error("Passwords do not match");
+      return;
+    }
+
+    await axios.post(
+      "http://localhost:5000/api/auth/register",
+      {
+        name,
+        email,
+        password,
+      }
+    );
+
+    toast.success(
+  "Account created successfully!"
+);
+
+setTimeout(() => {
+
+  navigate("/");
+
+}, 1000);
+
+  } catch (error) {
+    console.log(error);
+
+    toast.error(
+  error.response?.data?.message ||
+  "Signup failed"
+);
+  }
+};
+
   return (
     <div className="h-screen flex items-center justify-center bg-gray-100">
       <div className="bg-white p-8 rounded-xl shadow-lg w-[420px]">
@@ -32,16 +87,24 @@ function Signup() {
         </p>
 
         <input
-          type="text"
-          placeholder="Full Name"
-          className="w-full border border-gray-300 p-3 rounded-lg mb-4 focus:outline-none focus:ring-2 focus:ring-slate-900"
-        />
+  type="text"
+  placeholder="Full Name"
+  value={name}
+  onChange={(e) =>
+    setName(e.target.value)
+  }
+  className="w-full border border-gray-300 p-3 rounded-lg mb-4 focus:outline-none focus:ring-2 focus:ring-slate-900"
+/>
 
         <input
-          type="email"
-          placeholder="Email"
-          className="w-full border border-gray-300 p-3 rounded-lg mb-4 focus:outline-none focus:ring-2 focus:ring-slate-900"
-        />
+  type="email"
+  placeholder="Email"
+  value={email}
+  onChange={(e) =>
+    setEmail(e.target.value)
+  }
+  className="w-full border border-gray-300 p-3 rounded-lg mb-4 focus:outline-none focus:ring-2 focus:ring-slate-900"
+/>
 
         <div className="relative mb-4">
 
@@ -143,7 +206,10 @@ function Signup() {
 
 </div>
 
-        <button className="w-full bg-slate-900 text-white p-3 rounded-lg hover:bg-slate-800 transition">
+        <button
+  onClick={handleSignup}
+  className="w-full bg-slate-900 text-white p-3 rounded-lg hover:bg-slate-800 transition"
+>
           Sign Up
         </button>
 

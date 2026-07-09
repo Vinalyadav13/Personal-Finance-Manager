@@ -1,4 +1,5 @@
 const db = require("../config/db");
+const verifyToken = require("../middleware/authMiddleware");
 const bcrypt = require("bcrypt");
 const jwt = require("jsonwebtoken");
 
