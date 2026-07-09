@@ -26,7 +26,7 @@ const [deleteId, setDeleteId] =
       const token = localStorage.getItem("token");
 
       const response = await axios.get(
-        "http://localhost:5000/api/budgets",
+        "/api/budgets",
         {
           headers: {
             Authorization: `Bearer ${token}`,
@@ -45,7 +45,7 @@ const [deleteId, setDeleteId] =
     const token = localStorage.getItem("token");
 
     await axios.post(
-      "http://localhost:5000/api/budgets",
+      "/api/budgets",
       {
         category,
         amount,
@@ -85,7 +85,7 @@ const handleUpdateBudget = async () => {
     const token = localStorage.getItem("token");
 
     await axios.put(
-      `http://localhost:5000/api/budgets/${editId}`,
+      `/api/budgets/${editId}`,
       {
         category,
         amount,
@@ -121,7 +121,7 @@ const handleDelete = async (id) => {
     const token = localStorage.getItem("token");
 
     await axios.delete(
-      `http://localhost:5000/api/budgets/${id}`,
+      `/api/budgets/${id}`,
       {
         headers: {
           Authorization: `Bearer ${token}`,

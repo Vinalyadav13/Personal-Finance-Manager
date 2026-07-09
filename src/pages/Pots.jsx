@@ -53,7 +53,7 @@ function Pots() {
       const token = localStorage.getItem("token");
 
       const response = await axios.get(
-        "http://localhost:5000/api/pots",
+        "/api/pots",
         {
           headers: {
             Authorization: `Bearer ${token}`,
@@ -88,7 +88,7 @@ function Pots() {
       );
 
       await axios.put(
-        `http://localhost:5000/api/pots/add-money/${selectedPotId}`,
+        `/api/pots/add-money/${selectedPotId}`,
         {
           amount: moneyAmount,
         },
@@ -100,7 +100,7 @@ function Pots() {
       );
 
       await axios.post(
-        "http://localhost:5000/api/transactions",
+        "/api/transactions",
         {
           title: `Added to ${currentPot.pot_name}`,
           amount: moneyAmount,
@@ -140,7 +140,7 @@ function Pots() {
       const token = localStorage.getItem("token");
 
       await axios.post(
-        "http://localhost:5000/api/pots",
+        "/api/pots",
         {
           pot_name: potName,
           target_amount: targetAmount,
@@ -190,7 +190,7 @@ function Pots() {
       }
 
       await axios.put(
-        `http://localhost:5000/api/pots/${selectedPot.id}`,
+        `/api/pots/${selectedPot.id}`,
         {
           pot_name:
             selectedPot.pot_name,
@@ -210,7 +210,7 @@ function Pots() {
       );
 
       await axios.post(
-        "http://localhost:5000/api/transactions",
+        "/api/transactions",
         {
           title: `Withdrawn from ${selectedPot.pot_name}`,
           amount: withdrawAmount,
@@ -271,7 +271,7 @@ function Pots() {
         localStorage.getItem("token");
 
       await axios.delete(
-        `http://localhost:5000/api/pots/${id}`,
+        `/api/pots/${id}`,
         {
           headers: {
             Authorization:
@@ -302,7 +302,7 @@ function Pots() {
       const token = localStorage.getItem("token");
 
       await axios.put(
-        `http://localhost:5000/api/pots/${editId}`,
+        `/api/pots/${editId}`,
         {
           pot_name: potName,
           target_amount: targetAmount,

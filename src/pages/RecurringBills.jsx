@@ -31,7 +31,7 @@ const [deleteId, setDeleteId] =
       const token = localStorage.getItem("token");
 
       const response = await axios.get(
-        "http://localhost:5000/api/recurring-bills",
+        "/api/recurring-bills",
         {
           headers: {
             Authorization: `Bearer ${token}`,
@@ -108,7 +108,7 @@ const unpaidBills = bills
     const token = localStorage.getItem("token");
 
     await axios.post(
-      "http://localhost:5000/api/recurring-bills",
+      "/api/recurring-bills",
       {
         bill_name: billName,
         amount,
@@ -169,7 +169,7 @@ const handleUpdateBill = async () => {
     const token = localStorage.getItem("token");
 
     await axios.put(
-      `http://localhost:5000/api/recurring-bills/${editId}`,
+      `/api/recurring-bills/${editId}`,
       {
         bill_name: billName,
         amount,
@@ -210,7 +210,7 @@ const handleDelete = async (id) => {
     const token = localStorage.getItem("token");
 
     await axios.delete(
-      `http://localhost:5000/api/recurring-bills/${id}`,
+      `/api/recurring-bills/${id}`,
       {
         headers: {
           Authorization: `Bearer ${token}`,
@@ -234,7 +234,7 @@ const handleStatusChange = async (
       localStorage.getItem("token");
 
     await axios.put(
-  `http://localhost:5000/api/recurring-bills/status/${id}`,
+  `/api/recurring-bills/status/${id}`,
       {
         status,
       },

@@ -38,7 +38,7 @@ const fetchSummary = async () => {
     const token = localStorage.getItem("token");
 
     const response = await axios.get(
-      "http://localhost:5000/api/transactions/summary",
+      "/api/transactions/summary",
       {
         headers: {
           Authorization: `Bearer ${token}`,
@@ -59,7 +59,7 @@ const fetchRecentTransactions = async () => {
     const token = localStorage.getItem("token");
 
     const response = await axios.get(
-      "http://localhost:5000/api/transactions/recent",
+      "/api/transactions/recent",
       {
         headers: {
           Authorization: `Bearer ${token}`,
@@ -80,7 +80,7 @@ const fetchUpcomingBills = async () => {
     const token = localStorage.getItem("token");
 
     const response = await axios.get(
-      "http://localhost:5000/api/recurring-bills",
+      "/api/recurring-bills",
       {
         headers: {
           Authorization: `Bearer ${token}`,
@@ -126,7 +126,7 @@ const fetchBudgets = async () => {
       localStorage.getItem("token");
 
     const response = await axios.get(
-      "http://localhost:5000/api/budgets",
+      "/api/budgets",
       {
         headers: {
           Authorization:
@@ -149,7 +149,7 @@ const fetchPots = async () => {
       localStorage.getItem("token");
 
     const response = await axios.get(
-      "http://localhost:5000/api/pots",
+      "/api/pots",
       {
         headers: {
           Authorization:
@@ -172,7 +172,7 @@ const fetchIncomeExpenseTrend = async () => {
     const token = localStorage.getItem("token");
 
     const response = await axios.get(
-      "http://localhost:5000/api/analytics/income-expense-trend",
+      "/api/analytics/income-expense-trend",
       {
         headers: {
           Authorization: `Bearer ${token}`,
@@ -228,7 +228,7 @@ const downloadReport = async (filter) => {
     const token = localStorage.getItem("token");
 
     const response = await axios.get(
-      `http://localhost:5000/api/download-report?filter=${filter}`,
+      `/api/download-report?filter=${filter}`,
       {
         headers: {
           Authorization: `Bearer ${token}`,
@@ -275,7 +275,7 @@ const emailReport = async (filter) => {
     const token = localStorage.getItem("token");
 
     const response = await axios.get(
-      `http://localhost:5000/api/email-report?filter=${filter}`,
+      `/api/email-report?filter=${filter}`,
       {
         headers: {
           Authorization: `Bearer ${token}`,

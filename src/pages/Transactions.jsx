@@ -33,7 +33,7 @@ const [type, setType] = useState("");
       console.log("TOKEN FROM STORAGE:", token);
 
 const response = await axios.get(
-  "http://localhost:5000/api/transactions",
+  "/api/transactions",
   {
     headers: {
       Authorization: `Bearer ${token}`,
@@ -52,7 +52,7 @@ const response = await axios.get(
     const token = localStorage.getItem("token");
 
     await axios.post(
-      "http://localhost:5000/api/transactions",
+      "/api/transactions",
       {
         title,
         amount,
@@ -88,7 +88,7 @@ const handleDelete = async (id) => {
     const token = localStorage.getItem("token");
 
     await axios.delete(
-      `http://localhost:5000/api/transactions/${id}`,
+      `/api/transactions/${id}`,
       {
         headers: {
           Authorization: `Bearer ${token}`,
@@ -160,7 +160,7 @@ const handleUpdateTransaction = async () => {
     const token = localStorage.getItem("token");
 
     await axios.put(
-      `http://localhost:5000/api/transactions/${editId}`,
+      `/api/transactions/${editId}`,
       {
         title,
         amount,

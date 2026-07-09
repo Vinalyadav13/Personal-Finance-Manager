@@ -39,7 +39,7 @@ const [showConfirmPassword, setShowConfirmPassword] =
 
       const response = await axios.post(
 
-        `http://localhost:5000/api/reset-password/${token}`,
+        `/api/reset-password/${token}`,
 
         {
           password,
