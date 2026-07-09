@@ -250,6 +250,11 @@ const openDeleteModal = (id) => {
   setShowDeleteModal(true);
 };
 
+const openDeleteModal = (id) => {
+  setDeleteId(id);
+  setShowDeleteModal(true);
+};
+
 
 const handleEdit = (pot) => {
   setIsEditing(true);
