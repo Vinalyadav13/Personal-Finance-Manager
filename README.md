@@ -1,5 +1,7 @@
 # Finance App
 
+
+
 A full-stack personal finance management application for tracking expenses, managing budgets, monitoring recurring bills, and achieving savings goals.
 
 ## Features
@@ -13,6 +15,7 @@ A full-stack personal finance management application for tracking expenses, mana
 - Recurring bill management
 - Search and filtering functionality
 - Responsive UI
+
 
 ## Tech Stack
 
